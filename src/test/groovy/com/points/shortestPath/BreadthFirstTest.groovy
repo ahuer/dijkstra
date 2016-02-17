@@ -3,6 +3,10 @@ package com.points.shortestPath
 import static org.junit.Assert.*
 import org.junit.Test
 
+import com.points.model.Edge;
+import com.points.model.Graph;
+import com.points.model.Vertex;
+
 class BreadthFirstTest {
 	
 	@Test

@@ -1,4 +1,4 @@
-package com.points.shortestPath;
+package com.points.model;
 
 import java.util.List;
 

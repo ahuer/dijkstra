@@ -5,26 +5,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.points.model.Edge;
+import com.points.model.Graph;
+import com.points.model.Vertex;
+
 public class BreadthFirst {
 	private Graph graph;
+	private List<Vertex> vertices;
 	private List<Vertex> shortestPath;
 	private int shortestPathTotal;
 	private Vertex endPoint;
 	
-	public BreadthFirst(Graph graph) {
+	public BreadthFirst(Graph graph) throws IllegalArgumentException {
+		if (graph == null || graph.getVertices() == null ) {
+			throw new IllegalArgumentException("Invalid graph provided");
+		}
+		
 		this.graph = graph;
+		this.vertices = graph.getVertices();
 	}
 	
 	public List<Vertex> shortestPath(Vertex start, Vertex end) {
-		if (graph == null ) {
-			return null;
-		}
-		
-		if (graph.getVertices() == null ) {
-			return null;
-		}
-		
-		if (!graph.getVertices().contains(start) || !graph.getVertices().contains(end) ) {
+		if (!vertices.contains(start) || !vertices.contains(end) ) {
 			return null;
 		}
 		
@@ -33,7 +35,7 @@ public class BreadthFirst {
 		endPoint = end;
 		
 		Map<Vertex, Boolean> visited = new HashMap<>();
-		for (Vertex v : graph.getVertices() ) {
+		for (Vertex v : vertices ) {
 			visited.put(v, false);
 		}
 		

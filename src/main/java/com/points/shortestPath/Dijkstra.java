@@ -5,18 +5,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Graph {
+import com.points.model.Graph;
+import com.points.model.Vertex;
+
+public class Dijkstra {
+	private Graph graph;
 	private List<Vertex> vertices;
 	
-	public Graph(List<Vertex> vertices ) {
-		this.vertices = vertices;
-	}
-	
-	public List<Vertex> getVertices() {
-		return vertices;
+	public Dijkstra(Graph graph) throws IllegalArgumentException {
+		if (graph == null || graph.getVertices() == null ) {
+			throw new IllegalArgumentException("Invalid graph provided");
+		}
+		
+		this.graph = graph;
+		this.vertices = graph.getVertices();
 	}
 	
 	public List<Vertex> shortestPath(Vertex start, Vertex end) {
+		
 		if (!vertices.contains(start) || !vertices.contains(end) ) {
 			return null;
 		}
@@ -44,4 +50,5 @@ public class Graph {
 			currentValues.put(v, 99999);
 		}		
 	}
+
 }

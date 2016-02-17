@@ -1,4 +1,4 @@
-package com.points.shortestPath;
+package com.points.model;
 
 public class Edge {
 	private Vertex vertex;
