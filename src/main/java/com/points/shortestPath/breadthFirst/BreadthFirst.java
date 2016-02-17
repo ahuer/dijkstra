@@ -1,4 +1,4 @@
-package com.points.shortestPath;
+package com.points.shortestPath.breadthFirst;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,10 +8,13 @@ import java.util.Map;
 import com.points.model.Edge;
 import com.points.model.Graph;
 import com.points.model.Vertex;
+import com.points.tree.Node;
 
 public class BreadthFirst {
 	private Graph graph;
 	private List<Vertex> vertices;
+	private Node root;
+	
 	private List<Vertex> shortestPath;
 	private int shortestPathTotal;
 	private Vertex endPoint;
@@ -23,12 +26,21 @@ public class BreadthFirst {
 		
 		this.graph = graph;
 		this.vertices = graph.getVertices();
+		
+	}
+	
+	private Node createTreeAndSetRoot(Vertex start) {
+		
+		
+		return null;
 	}
 	
 	public List<Vertex> shortestPath(Vertex start, Vertex end) {
 		if (!vertices.contains(start) || !vertices.contains(end) ) {
 			return null;
 		}
+		
+		root = createTreeAndSetRoot(start);
 		
 		shortestPath = new ArrayList<>();
 		shortestPathTotal = Integer.MAX_VALUE;
