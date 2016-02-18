@@ -2,7 +2,7 @@ package com.points.model;
 
 import java.util.List;
 
-public class Vertex {
+public class Vertex implements Comparable {
 	private String name;
 	private List<Edge> edges;
 	
@@ -33,6 +33,11 @@ public class Vertex {
 				return e.getWeight();
 			}
 		}
+		return 0;
+	}
+
+	@Override
+	public int compareTo(Object o) {
 		return 0;
 	}
 

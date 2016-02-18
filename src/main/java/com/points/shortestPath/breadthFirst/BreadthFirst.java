@@ -1,7 +1,6 @@
 package com.points.shortestPath.breadthFirst;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,9 +12,10 @@ import com.points.tree.Node;
 public class BreadthFirst {
 	private Graph graph;
 	private List<Vertex> vertices;
-	private Node root;
+	private BreadthNode root;
 	
-	private List<Vertex> shortestPath;
+	//private List<Vertex> shortestPath;
+	private BreadthNode shortestPathEndNode;
 	private int shortestPathTotal;
 	private Vertex endPoint;
 	
@@ -25,64 +25,79 @@ public class BreadthFirst {
 		}
 		
 		this.graph = graph;
-		this.vertices = graph.getVertices();
-		
+		this.vertices = graph.getVertices();	
 	}
 	
-	private Node createTreeAndSetRoot(Vertex start) {
-		
-		
-		return null;
+	public int getShortestPathTotal() {
+		return shortestPathTotal;
 	}
 	
-	public List<Vertex> shortestPath(Vertex start, Vertex end) {
+	public BreadthNode getShortestPathEndNode() {
+		return shortestPathEndNode;
+	}
+	
+	public List<Vertex> getShortestPathList() {
+		if (shortestPathEndNode == null ) {
+			return null;
+		}
+		
+		List<Vertex> reversePath = new ArrayList<>();
+		BreadthNode currentNode = shortestPathEndNode;
+		reversePath.add(currentNode.getData());
+		
+		while (currentNode.getParent() != null ) {
+			BreadthNode parentNode = currentNode.getParent();
+			reversePath.add(parentNode.getData());
+			currentNode = parentNode;
+		}	
+		
+		List<Vertex> path = new ArrayList<>(reversePath.size());
+		for (int i = reversePath.size() - 1; i >= 0; i-- ) {
+			path.add(reversePath.get(i));
+		}
+		
+		return path;
+	}
+		
+	public BreadthNode shortestPath(Vertex start, Vertex end) {
 		if (!vertices.contains(start) || !vertices.contains(end) ) {
 			return null;
 		}
 		
-		root = createTreeAndSetRoot(start);
+		BreadthTree breadthTree = new BreadthTree(graph, start);
+		root = breadthTree.getRoot();
 		
-		shortestPath = new ArrayList<>();
-		shortestPathTotal = Integer.MAX_VALUE;
-		endPoint = end;
-		
-		Map<Vertex, Boolean> visited = new HashMap<>();
-		for (Vertex v : vertices ) {
-			visited.put(v, false);
+		if (root == null ) {
+			return null;
 		}
 		
+		shortestPathEndNode = null;
+		shortestPathTotal = Integer.MAX_VALUE;
+		endPoint = end;
 		int currentTotal = 0;
-		List<Vertex> currentPath = new ArrayList<>();
-		currentPath.add(start);
-		visited.put(start, true);
 		
-		bfs(currentTotal, currentPath, visited);
+		bfs(currentTotal, root);
 		
-		return shortestPath;
+		return shortestPathEndNode;
 	}
 	
-	private void bfs(int currentTotal, List<Vertex> currentPath, Map<Vertex, Boolean> visited) {
-		Vertex lastInList = currentPath.get(currentPath.size() - 1);
+	private void bfs(int currentTotal, BreadthNode currentNode) {
+		Vertex currentVertex = currentNode.getData();
 		
-		if (lastInList == endPoint ) {
+		if (currentVertex == endPoint ) {
 			if (currentTotal < shortestPathTotal ) {
-				shortestPath = new ArrayList<>();
-				shortestPath.addAll(currentPath);
 				shortestPathTotal = currentTotal;
+				shortestPathEndNode = currentNode;
 			}
 			return;
 		}
 		
-		List<Vertex> childrenToVisit = getUnvisitedChildren(lastInList, visited);		
-		if (childrenToVisit.size() == 0 ) {
-			return;
-		}
+		List<BreadthNode> children = (List<BreadthNode>) currentNode.getChildren().values();
 		
-		for (Vertex child : childrenToVisit ) {
-			int weight = lastInList.getEdgeWeight(child);
-			currentPath.add(child);
-			visited.put(child, true);
-			bfs(currentTotal + weight, currentPath, visited);
+		for (BreadthNode child : currentNode.getChildren().values() ) {
+			int weight = currentVertex.getEdgeWeight(child);
+			visited.add(child);
+			bfs(currentTotal + weight, child, visited);
 			
 			//reset for next child
 			currentPath.remove(currentPath.size() - 1);
