@@ -1,17 +1,17 @@
-package com.points.shortestPath.breadthFirst
+package com.points.shortestPath
 
 import static org.junit.Assert.*
+
 import org.junit.Test
 
-import com.points.model.Edge;
-import com.points.model.Graph;
+import com.points.model.Edge
+import com.points.model.Graph
 import com.points.model.Vertex
-import com.points.shortestPath.breadthFirst.BreadthFirst;;
 
-class BreadthFirstTest {
+class DijkstraTest {
 	
 	@Test
-	public void testSmallBFS() {
+	public void testSmallGraph() {
 		def vertA = new Vertex("A")
 		def vertB = new Vertex("B")
 		def edgeToA = new Edge(vertA, 7)
@@ -20,21 +20,14 @@ class BreadthFirstTest {
 		vertB.setEdges([edgeToA])
 		
 		def graph = new Graph([vertA, vertB])
-		def breadth = new BreadthFirst(graph)
-		
-		// works from A to B
-		def result = breadth.shortestPath(vertA, vertB)
+		def dijkstra = new Dijkstra(graph)
+		def result = dijkstra.shortestPath(vertA, vertB)
 		assertEquals(7, result)
-		assertEquals([vertA, vertB], breadth.getShortestPathList())
-				
-		// works from B to A
-		result = breadth.shortestPath(vertB, vertA)
-		assertEquals(7, result)
-		assertEquals([vertB, vertA], breadth.getShortestPathList())		
+		assertEquals([vertA, vertB], dijkstra.getShortestPathList())
 	}
 	
 	@Test
-	public void testLargeBFS() {
+	public void testLargeGraph() {
 		def vertA = new Vertex("A")
 		def vertB = new Vertex("B")
 		def vertC = new Vertex("C")
@@ -60,11 +53,10 @@ class BreadthFirstTest {
 		vertE.setEdges([edgeEToA, edgeEToB, edgeEToC])
 		
 		def graph = new Graph([vertA, vertB, vertC, vertD, vertE])
-		def breadth = new BreadthFirst(graph)
-		
-		def result = breadth.shortestPath(vertA, vertD)
-		assertEquals(10, result)
-		assertEquals([vertA, vertB, vertD], breadth.getShortestPathList())		
+		def dijkstra = new Dijkstra(graph)
+		def result = dijkstra.shortestPath(vertA, vertD)
+		assertEquals(10, result)	
+		assertEquals([vertA, vertB, vertD], dijkstra.getShortestPathList())	
 	}
 
 }

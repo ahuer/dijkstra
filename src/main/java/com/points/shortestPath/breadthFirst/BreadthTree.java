@@ -27,7 +27,7 @@ public class BreadthTree {
 			return null;
 		}
 		
-		BreadthNode rootNode = new BreadthNode(start, null);
+		BreadthNode rootNode = new BreadthNode(start, null, 0);
 		Queue<BreadthNode> nodeQueue = new ConcurrentLinkedQueue<>();
 		nodeQueue.add(rootNode);
 		
@@ -43,7 +43,7 @@ public class BreadthTree {
 					continue;
 				}
 				
-				BreadthNode childNode = new BreadthNode(child, currentNode);
+				BreadthNode childNode = new BreadthNode(child, currentNode, currentNode.getPathTotal() + e.getWeight());
 				nodeQueue.add(childNode);
 				currentNode.setChild(childNode, childCount);
 				childCount ++;								

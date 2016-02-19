@@ -2,53 +2,96 @@ package com.points.shortestPath;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import com.points.model.Edge;
 import com.points.model.Graph;
 import com.points.model.Vertex;
 
 public class Dijkstra {
-	private Graph graph;
 	private List<Vertex> vertices;
+	private Map<Vertex, Vertex> predecessors = new HashMap<>();
+	private List<Vertex> path;
 	
 	public Dijkstra(Graph graph) throws IllegalArgumentException {
 		if (graph == null || graph.getVertices() == null ) {
 			throw new IllegalArgumentException("Invalid graph provided");
 		}
 		
-		this.graph = graph;
 		this.vertices = graph.getVertices();
 	}
 	
-	public List<Vertex> shortestPath(Vertex start, Vertex end) {
-		
-		if (!vertices.contains(start) || !vertices.contains(end) ) {
-			return null;
-		}
-		
-		List<Vertex> pathTaken = new ArrayList<>();
-		List<Vertex> availableVertices = new ArrayList<>();		
-		Map<Vertex, Integer> currentValues = new HashMap<>();
-		initialize(availableVertices, currentValues);
-		
-		currentValues.put(start, 0);
-		pathTaken.add(start);
-		availableVertices.remove(start);
-		int currentTotal = 0;		
-		
-		
-		return null;
+	public List<Vertex> getShortestPathList() {
+		return path;
 	}
 	
-	private void initialize(List<Vertex> availableVertices, Map<Vertex, Integer> currentValues) {
-		for (Vertex v : vertices ) {
-			availableVertices.add(v);
+	private void calculatShortestPathList(Vertex start, Vertex end) {
+		List<Vertex> reversePath = new ArrayList<>();
+		Vertex currentVertex = end;
+		reversePath.add(end);
+		
+		while (currentVertex != start ) {
+			Vertex previous = predecessors.get(currentVertex); 
+			reversePath.add(previous);
+			currentVertex = previous;
 		}
 		
-		for (Vertex v : vertices ) {
-			currentValues.put(v, 99999);
-		}		
+		path = new ArrayList<>();
+		for (Vertex v : reversePath ) {
+			path.add(v);
+		}
 	}
-
+	
+	public int shortestPath(Vertex start, Vertex end) {
+		if (!vertices.contains(start) || !vertices.contains(end) ) {
+			return 0;
+		}
+		
+		Set<Vertex> verticesTraversed = new HashSet<>();		
+		Map<Vertex, Integer> currentValues = new HashMap<>();
+		for (Vertex v : vertices ) {
+			currentValues.put(v, Integer.MAX_VALUE);
+		}
+		
+		currentValues.put(start, 0);
+		verticesTraversed.add(start);
+		
+		Vertex currentVertex = start;
+		
+		while(currentVertex != null) {
+			int lowestWeight = Integer.MAX_VALUE;
+			Vertex nextVertex = null;
+			
+			for (Edge edge : currentVertex.getEdges() ) {
+				Vertex vertex = edge.getVertex();
+				
+				if (verticesTraversed.contains(vertex) ) {
+					continue;
+				}
+				
+				int weight = currentValues.get(currentVertex) + edge.getWeight();
+				if (weight < currentValues.get(vertex) ) {
+					currentValues.put(vertex, weight);
+					predecessors.put(vertex, currentVertex);
+				}
+				
+				if (currentValues.get(vertex) < lowestWeight ) {
+					lowestWeight = currentValues.get(vertex);
+					nextVertex = vertex;
+				}
+			}
+			
+			if (nextVertex != null ) {
+				verticesTraversed.add(nextVertex);
+			}
+			currentVertex = nextVertex;			
+		}		
+		
+		calculatShortestPathList(start, end);
+		return currentValues.get(end);
+	}
+	
 }

@@ -2,19 +2,15 @@ package com.points.shortestPath.breadthFirst;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import com.points.model.Edge;
 import com.points.model.Graph;
 import com.points.model.Vertex;
-import com.points.tree.Node;
 
 public class BreadthFirst {
 	private Graph graph;
 	private List<Vertex> vertices;
 	private BreadthNode root;
 	
-	//private List<Vertex> shortestPath;
 	private BreadthNode shortestPathEndNode;
 	private int shortestPathTotal;
 	private Vertex endPoint;
@@ -59,61 +55,44 @@ public class BreadthFirst {
 		return path;
 	}
 		
-	public BreadthNode shortestPath(Vertex start, Vertex end) {
+	public int shortestPath(Vertex start, Vertex end) {
 		if (!vertices.contains(start) || !vertices.contains(end) ) {
-			return null;
+			return 0;
 		}
 		
 		BreadthTree breadthTree = new BreadthTree(graph, start);
 		root = breadthTree.getRoot();
 		
 		if (root == null ) {
-			return null;
+			return 0;
 		}
 		
 		shortestPathEndNode = null;
 		shortestPathTotal = Integer.MAX_VALUE;
 		endPoint = end;
-		int currentTotal = 0;
 		
-		bfs(currentTotal, root);
+		bfs(root);
 		
-		return shortestPathEndNode;
+		if (shortestPathTotal == Integer.MAX_VALUE ) {
+			return 0;
+		}
+		return shortestPathTotal;
 	}
 	
-	private void bfs(int currentTotal, BreadthNode currentNode) {
+	private void bfs(BreadthNode currentNode) {
 		Vertex currentVertex = currentNode.getData();
 		
 		if (currentVertex == endPoint ) {
-			if (currentTotal < shortestPathTotal ) {
-				shortestPathTotal = currentTotal;
+			if (currentNode.getPathTotal() < shortestPathTotal ) {
+				shortestPathTotal = currentNode.getPathTotal();
 				shortestPathEndNode = currentNode;
 			}
 			return;
 		}
 		
-		List<BreadthNode> children = (List<BreadthNode>) currentNode.getChildren().values();
-		
-		for (BreadthNode child : currentNode.getChildren().values() ) {
-			int weight = currentVertex.getEdgeWeight(child);
-			visited.add(child);
-			bfs(currentTotal + weight, child, visited);
-			
-			//reset for next child
-			currentPath.remove(currentPath.size() - 1);
-			visited.put(child, false);
+		for (BreadthNode child : currentNode.getChildrenList() ) {
+			bfs(child);
 		}
 	}
-	
-	private List<Vertex> getUnvisitedChildren(Vertex lastInList, Map<Vertex, Boolean> visited) {
-		List<Vertex> childrenToVisit = new ArrayList<>();
-		for (Edge edge : lastInList.getEdges() ) {
-			Vertex v = edge.getVertex();
-			if (visited.get(v) == false) {
-				childrenToVisit.add(v);
-			}
-		}
-		return childrenToVisit;
-	}	
 
 }
