@@ -33,7 +33,7 @@ public class Vertex implements Comparable {
 				return e.getWeight();
 			}
 		}
-		return 0;
+		return -1;
 	}
 
 	@Override

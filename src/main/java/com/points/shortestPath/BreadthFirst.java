@@ -1,10 +1,12 @@
-package com.points.shortestPath.breadthFirst;
+package com.points.shortestPath;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.points.model.Graph;
 import com.points.model.Vertex;
+import com.points.shortestPath.breadthFirst.BreadthNode;
+import com.points.shortestPath.breadthFirst.BreadthTree;
 
 public class BreadthFirst {
 	private Graph graph;

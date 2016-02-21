@@ -40,8 +40,8 @@ public class Dijkstra {
 		}
 		
 		path = new ArrayList<>();
-		for (Vertex v : reversePath ) {
-			path.add(v);
+		for (int i = reversePath.size() - 1; i >= 0; i-- ) {
+			path.add(reversePath.get(i));
 		}
 	}
 	

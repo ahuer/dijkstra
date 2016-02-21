@@ -1,12 +1,13 @@
-package com.points.shortestPath.breadthFirst
+package com.points.shortestPath
 
 import static org.junit.Assert.*
+
 import org.junit.Test
 
 import com.points.model.Edge;
 import com.points.model.Graph;
 import com.points.model.Vertex
-import com.points.shortestPath.breadthFirst.BreadthFirst;;
+import com.points.shortestPath.BreadthFirst;
 
 class BreadthFirstTest {
 	
