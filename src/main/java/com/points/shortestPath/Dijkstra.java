@@ -7,34 +7,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.points.model.Edge;
 import com.points.model.Graph;
 import com.points.model.Vertex;
 
-public class Dijkstra {
-	private List<Vertex> vertices;
-	private Map<Vertex, Vertex> predecessors = new HashMap<>();
-	private List<Vertex> path;
+public class Dijkstra<T> {
+	private List<Vertex<T>> vertices;
+	private Map<Vertex<T>, Map<Vertex<T>, Number>> edgeWeights; 
+	private Map<Vertex<T>, Vertex<T>> predecessors = new HashMap<>();
+	private List<Vertex<T>> path;
 	
-	public Dijkstra(Graph graph) throws IllegalArgumentException {
-		if (graph == null || graph.getVertices() == null ) {
+	public Dijkstra(Graph<T> graph) throws IllegalArgumentException {
+		if (graph == null || graph.getVertices() == null || graph.getEdges() == null ) {
 			throw new IllegalArgumentException("Invalid graph provided");
 		}
 		
 		this.vertices = graph.getVertices();
+		this.edgeWeights = graph.getEdgeWeights();
 	}
 	
-	public List<Vertex> getShortestPathList() {
+	public List<Vertex<T>> getShortestPathList() {
 		return path;
 	}
 	
-	private void calculatShortestPathList(Vertex start, Vertex end) {
-		List<Vertex> reversePath = new ArrayList<>();
-		Vertex currentVertex = end;
+	private void calculateShortestPathList(Vertex<T> start, Vertex<T> end) {
+		List<Vertex<T>> reversePath = new ArrayList<>();
+		Vertex<T> currentVertex = end;
 		reversePath.add(end);
 		
 		while (currentVertex != start ) {
-			Vertex previous = predecessors.get(currentVertex); 
+			Vertex<T> previous = predecessors.get(currentVertex); 
 			reversePath.add(previous);
 			currentVertex = previous;
 		}
@@ -45,35 +46,36 @@ public class Dijkstra {
 		}
 	}
 	
-	public int shortestPath(Vertex start, Vertex end) {
+	public int shortestPath(Vertex<T> start, Vertex<T> end) {
 		if (!vertices.contains(start) || !vertices.contains(end) ) {
 			return 0;
 		}
 		
-		Set<Vertex> verticesTraversed = new HashSet<>();		
-		Map<Vertex, Integer> currentValues = new HashMap<>();
-		for (Vertex v : vertices ) {
+		Set<Vertex<T>> verticesTraversed = new HashSet<>();		
+		Map<Vertex<T>, Integer> currentValues = new HashMap<>();
+		for (Vertex<T> v : vertices ) {
 			currentValues.put(v, Integer.MAX_VALUE);
 		}
 		
 		currentValues.put(start, 0);
 		verticesTraversed.add(start);
 		
-		Vertex currentVertex = start;
+		Vertex<T> currentVertex = start;
 		
 		while(currentVertex != null) {
 			int lowestWeight = Integer.MAX_VALUE;
-			Vertex nextVertex = null;
+			Vertex<T> nextVertex = null;
 			
-			for (Edge edge : currentVertex.getEdges() ) {
-				Vertex vertex = edge.getVertex();
+			Map<Vertex<T>, Number> currentVertexEdges = edgeWeights.get(currentVertex);
+			
+			for (Vertex<T> vertex : currentVertexEdges.keySet()) {
 				
 				if (verticesTraversed.contains(vertex) ) {
 					continue;
 				}
 				
-				int weight = currentValues.get(currentVertex) + edge.getWeight();
-				if (weight < currentValues.get(vertex) ) {
+				int weight = currentValues.get(currentVertex) + currentVertexEdges.get(vertex).intValue();
+				if (weight < (currentValues.get(vertex)) ) {
 					currentValues.put(vertex, weight);
 					predecessors.put(vertex, currentVertex);
 				}
@@ -90,7 +92,7 @@ public class Dijkstra {
 			currentVertex = nextVertex;			
 		}		
 		
-		calculatShortestPathList(start, end);
+		calculateShortestPathList(start, end);
 		return currentValues.get(end);
 	}
 	

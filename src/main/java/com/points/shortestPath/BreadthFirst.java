@@ -8,17 +8,17 @@ import com.points.model.Vertex;
 import com.points.shortestPath.breadthFirst.BreadthNode;
 import com.points.shortestPath.breadthFirst.BreadthTree;
 
-public class BreadthFirst {
-	private Graph graph;
-	private List<Vertex> vertices;
-	private BreadthNode root;
+public class BreadthFirst<T> {
+	private Graph<T> graph;
+	private List<Vertex<T>> vertices;
+	private BreadthNode<T> root;
 	
-	private BreadthNode shortestPathEndNode;
+	private BreadthNode<T> shortestPathEndNode;
 	private int shortestPathTotal;
-	private Vertex endPoint;
+	private Vertex<T> endPoint;
 	
-	public BreadthFirst(Graph graph) throws IllegalArgumentException {
-		if (graph == null || graph.getVertices() == null ) {
+	public BreadthFirst(Graph<T> graph) throws IllegalArgumentException {
+		if (graph == null || graph.getVertices() == null || graph.getEdges() == null ) {
 			throw new IllegalArgumentException("Invalid graph provided");
 		}
 		
@@ -30,26 +30,26 @@ public class BreadthFirst {
 		return shortestPathTotal;
 	}
 	
-	public BreadthNode getShortestPathEndNode() {
+	public BreadthNode<T> getShortestPathEndNode() {
 		return shortestPathEndNode;
 	}
 	
-	public List<Vertex> getShortestPathList() {
+	public List<Vertex<T>> getShortestPathList() {
 		if (shortestPathEndNode == null ) {
 			return null;
 		}
 		
-		List<Vertex> reversePath = new ArrayList<>();
-		BreadthNode currentNode = shortestPathEndNode;
+		List<Vertex<T>> reversePath = new ArrayList<>();
+		BreadthNode<T> currentNode = shortestPathEndNode;
 		reversePath.add(currentNode.getData());
 		
 		while (currentNode.getParent() != null ) {
-			BreadthNode parentNode = currentNode.getParent();
+			BreadthNode<T> parentNode = currentNode.getParent();
 			reversePath.add(parentNode.getData());
 			currentNode = parentNode;
 		}	
 		
-		List<Vertex> path = new ArrayList<>(reversePath.size());
+		List<Vertex<T>> path = new ArrayList<>(reversePath.size());
 		for (int i = reversePath.size() - 1; i >= 0; i-- ) {
 			path.add(reversePath.get(i));
 		}
@@ -57,12 +57,12 @@ public class BreadthFirst {
 		return path;
 	}
 		
-	public int shortestPath(Vertex start, Vertex end) {
+	public int shortestPath(Vertex<T> start, Vertex<T> end) {
 		if (!vertices.contains(start) || !vertices.contains(end) ) {
 			return 0;
 		}
 		
-		BreadthTree breadthTree = new BreadthTree(graph, start);
+		BreadthTree<T> breadthTree = new BreadthTree<>(graph, start);
 		root = breadthTree.getRoot();
 		
 		if (root == null ) {
@@ -81,8 +81,8 @@ public class BreadthFirst {
 		return shortestPathTotal;
 	}
 	
-	private void bfs(BreadthNode currentNode) {
-		Vertex currentVertex = currentNode.getData();
+	private void bfs(BreadthNode<T> currentNode) {
+		Vertex<T> currentVertex = currentNode.getData();
 		
 		if (currentVertex == endPoint ) {
 			if (currentNode.getPathTotal() < shortestPathTotal ) {
@@ -92,7 +92,7 @@ public class BreadthFirst {
 			return;
 		}
 		
-		for (BreadthNode child : currentNode.getChildrenList() ) {
+		for (BreadthNode<T> child : currentNode.getChildrenList() ) {
 			bfs(child);
 		}
 	}

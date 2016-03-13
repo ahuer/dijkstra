@@ -7,17 +7,17 @@ import java.util.Map;
 import com.points.model.Vertex;
 import com.points.tree.Node;
 
-public class BreadthNode extends Node<Vertex> {
-	private BreadthNode parent;
+public class BreadthNode<T> extends Node<Vertex<T>> {
+	private BreadthNode<T> parent;
 	private int pathTotal;
 	
-	public BreadthNode(Vertex data, BreadthNode parent, int pathTotal) {
+	public BreadthNode(Vertex<T> data, BreadthNode<T> parent, int pathTotal) {
 		super(data);
 		this.parent = parent;
 		this.pathTotal = pathTotal;
 	}
 	
-	public BreadthNode getParent() {
+	public BreadthNode<T> getParent() {
 		return parent;
 	}
 	
@@ -25,12 +25,12 @@ public class BreadthNode extends Node<Vertex> {
 		return pathTotal;
 	}
 	
-	public List<BreadthNode> getChildrenList() {
-		Map<Integer, Node<Vertex>> childMap = this.getChildren();
-		List<BreadthNode> children = new ArrayList<>();
+	public List<BreadthNode<T>> getChildrenList() {
+		Map<Integer, Node<Vertex<T>>> childMap = this.getChildren();
+		List<BreadthNode<T>> children = new ArrayList<>();
 		
-		for (Node<Vertex> node : childMap.values() ) {
-			children.add((BreadthNode) node);
+		for (Node<Vertex<T>> node : childMap.values() ) {
+			children.add((BreadthNode<T>) node);
 		}
 		return children;
 	}
