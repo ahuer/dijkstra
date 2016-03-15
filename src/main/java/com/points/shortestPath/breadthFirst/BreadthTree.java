@@ -46,7 +46,7 @@ public class BreadthTree<T> {
 					continue;
 				}
 				
-				int currentPath = edges.get(currentNode).get(child).intValue();
+				int currentPath = edges.get(currentVertex).get(child).intValue();
 				BreadthNode<T> childNode = new BreadthNode<>(child, currentNode, currentNode.getPathTotal() + currentPath);
 				nodeQueue.add(childNode);
 				currentNode.setChild(childNode, childCount);
